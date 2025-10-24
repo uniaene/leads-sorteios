@@ -24,23 +24,15 @@ app.use(cors({
 }));
 
 // rate limit (anti-abuso por IP)
-const isStress = process.env.STRESS_TEST === "true";
-
-if (!isStress) {
-    const limiter = rateLimit({
-        windowMs: 5 * 1000, // 5s
-        max: 40,            // 40 req/5s por IP (~8 rps)
-        standardHeaders: true,
-        legacyHeaders: false
-    });
-    app.use(limiter);
-} else {
-    console.log("⚡ Rate limiter desativado (modo stress test)");
-}
+const limiter = rateLimit({
+    windowMs: 5 * 1000, // 5s
+    max: 40,            // 40 req/5s por IP (~8 rps)
+    standardHeaders: true,
+    legacyHeaders: false
+});
+app.use(limiter);
 
 // rotas
-app.get("/", (_, res) => res.json({ token: "loaderio-92742a39271319ea20a7897b350b2671" }));
-app.get("/loaderio-92742a39271319ea20a7897b350b2671", (_, res) => res.json({ token: "loaderio-92742a39271319ea20a7897b350b2671" }));
 app.get("/health", (_, res) => res.json({ ok: true }));
 app.use("/locals", localsRouter);
 app.use("/leads", leadsRouter);
