@@ -34,6 +34,7 @@ app.use(limiter);
 
 // rotas
 app.get("/", (_, res) => res.json({ token: "loaderio-92742a39271319ea20a7897b350b2671" }));
+app.get("/loaderio-92742a39271319ea20a7897b350b2671", (_, res) => res.json({ token: "loaderio-92742a39271319ea20a7897b350b2671" }));
 app.get("/health", (_, res) => res.json({ ok: true }));
 app.use("/locals", localsRouter);
 app.use("/leads", leadsRouter);
