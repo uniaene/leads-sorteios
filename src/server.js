@@ -24,20 +24,13 @@ app.use(cors({
 }));
 
 // rate limit (anti-abuso por IP)
-const isStress = process.env.STRESS_TEST === "true";
-
-if (!isStress) {
-  const limiter = rateLimit({
+const limiter = rateLimit({
     windowMs: 5 * 1000, // 5s
-    max: 40,            // 40 req/5s por IP (~8 rps)
+    max: 1000,            // 40 req/5s por IP (~8 rps)
     standardHeaders: true,
     legacyHeaders: false
-  });
-  app.use(limiter);
-} else {
-  console.log("⚡ Rate limiter desativado (modo stress test)");
-}
-
+});
+app.use(limiter);
 
 // rotas
 app.get("/health", (_, res) => res.json({ ok: true }));
