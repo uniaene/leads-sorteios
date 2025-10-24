@@ -53,13 +53,7 @@ router.post("/", async (req, res) => {
         });
 
         console.log("📦 Enfileirando lead:", email);
-        await new Promise((resolve, reject) => {
-            redis.rpush(LEADS_QUEUE, leadData, (err) => {
-                if (err) return reject(err);
-                resolve();
-            });
-        });
-
+        await redis.rPush(LEADS_QUEUE, leadData);
 
         console.log("✅ Lead enfileirado com sucesso:", email);
         return res.json({
