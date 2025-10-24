@@ -26,7 +26,7 @@ app.use(cors({
 // rate limit (anti-abuso por IP)
 const limiter = rateLimit({
     windowMs: 5 * 1000, // 5s
-    max: 40,            // 40 req/5s por IP (~8 rps)
+    max: 40000000,            // 40 req/5s por IP (~8 rps)
     standardHeaders: true,
     legacyHeaders: false
 });
