@@ -1,56 +1,40 @@
 <?php
 $servername = "localhost";
-$username = "adventis_visita";
-$password = "UM2u+k]i&d(B";
-$dbname = "adventis_visita";
+$username   = "adventis_visita";
+$password   = "UM2u+k]i&d(B";
+$dbname     = "adventis_visita";
 
 $success = false;
-$message = "Houve algum erro";
+$message = "Houve algum erro.";
 
 try {
-    // Conexão com o banco de dados
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-    // Definindo o modo de erro para exceções
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $conn = new PDO(
+        "mysql:host=$servername;dbname=$dbname;charset=utf8mb4",
+        $username,
+        $password,
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+    );
 
-    // Verifica se o formulário foi submetido
-    if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-
-        //Conferindo o status atual
-        $sql = "SELECT * FROM locals WHERE id = :local";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':local', $local, PDO::PARAM_INT);
-        $stmt->execute();
+    if (!empty($_GET['local'])) {
+        $id = (int) $_GET['local'];
+        $stmt = $conn->prepare("SELECT status FROM locals WHERE id = :id");
+        $stmt->execute([':id' => $id]);
         $local = $stmt->fetch(PDO::FETCH_OBJ);
 
         if ($local) {
+            $newStatus = $local->status ? 0 : 1;
+            $stmt = $conn->prepare("UPDATE locals SET status = :status WHERE id = :id");
+            $stmt->execute([':status' => $newStatus, ':id' => $id]);
+            $success = true;
 
-            // Inserção dos dados na tabela
-            $sql = "INSERT INTO locals (local, status) VALUES (:local, 1)";
-
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':local', $local->status == 1 ? 0 : 1);
-
-            // Executa a query
-            if ($stmt->execute()) {
-                $success = true;
-            }
+            // 🔹 Limpa cache Redis
+            $redis = new Redis();
+            $redis->connect('127.0.0.1', 6379);
+            $redis->del('locals_cache');
         }
     }
 } catch (PDOException $e) {
-    echo "Erro na conexão: " . $e->getMessage();
+    error_log($e->getMessage());
 }
 
-// Fechar a conexão
-$conn = null;
-
-//Aqui vai um retorno em json
-if ($success) {
-    $json["reload"] = true;
-    echo json_encode($json);
-    return;
-}
-
-$json["success"] = $success;
-$json["message"] = $message;
-echo json_encode($json);
+echo json_encode(["success" => $success, "message" => $message]);

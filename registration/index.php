@@ -1,7 +1,7 @@
 <?php
+
 /**
- * UNIAENE - Sistema de Captação de Leads Otimizado
- * by Fernando Issler + GPT-5
+ * UNIAENE - Registro de Leads (com suporte a Redis Queue)
  */
 
 $servername = "localhost";
@@ -11,10 +11,9 @@ $dbname     = "adventis_visita";
 
 $success = false;
 $message = "Erro desconhecido.";
-$useQueue = false; // mudar para true se quiser ativar fila com Redis
+$useQueue = true; // ativa fila Redis
 
 try {
-    // Conexão PDO com persistência (melhor performance sob carga)
     $conn = new PDO(
         "mysql:host=$servername;dbname=$dbname;charset=utf8mb4",
         $username,
@@ -26,73 +25,52 @@ try {
     );
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $data = [
+            "local" => trim($_POST['local'] ?? ''),
+            "fullname" => trim($_POST['fullname'] ?? ''),
+            "email" => trim($_POST['email'] ?? ''),
+            "whatsapp" => trim($_POST['whatsapp'] ?? ''),
+            "course" => trim($_POST['course'] ?? ''),
+            "terms" => ($_POST['terms'] ?? '') === 'Yes' ? 1 : 0
+        ];
 
-        // Sanitização simples
-        $local     = trim($_POST['local'] ?? '');
-        $fullname  = trim($_POST['fullname'] ?? '');
-        $email     = trim($_POST['email'] ?? '');
-        $whatsapp  = trim($_POST['whatsapp'] ?? '');
-        $course    = trim($_POST['course'] ?? '');
-        $terms     = isset($_POST['terms']) && $_POST['terms'] === 'Yes' ? 1 : 0;
-
-        // Validação
-        if (empty($local) || empty($fullname) || empty($email) || empty($whatsapp) || empty($course) || !$terms) {
-            echo json_encode(["success" => false, "message" => "Preencha todos os campos obrigatórios."]);
+        if (in_array('', [$data['local'], $data['fullname'], $data['email'], $data['whatsapp'], $data['course']]) || !$data['terms']) {
+            echo json_encode(["success" => false, "message" => "Preencha todos os campos."]);
             exit;
         }
 
-        // Se quiser usar Redis para fila
+        // 🔹 Redis Queue (para absorver picos)
         if ($useQueue && class_exists('Redis')) {
             try {
                 $redis = new Redis();
                 $redis->connect('127.0.0.1', 6379);
-                $leadData = json_encode([
-                    "local" => $local,
-                    "fullname" => $fullname,
-                    "email" => $email,
-                    "whatsapp" => $whatsapp,
-                    "course" => $course,
-                    "terms" => $terms
-                ]);
-                $redis->rPush('leads_queue', $leadData);
-                $success = true;
-                $message = "Cadastro recebido! Ele será processado em alguns instantes.";
+                $redis->rPush('leads_queue', json_encode($data));
+                echo json_encode(["success" => true, "message" => "Cadastro recebido! (em fila)"]);
+                exit;
             } catch (Exception $e) {
-                // fallback se Redis estiver indisponível
                 $useQueue = false;
             }
         }
 
-        // Caso não use Redis ou o fallback seja necessário
-        if (!$useQueue) {
-            // Usa INSERT IGNORE + índice único (evita duplicados automaticamente)
-            $sql = "INSERT IGNORE INTO registros_visitas (local, fullname, email, whatsapp, course, terms, created_at)
-                    VALUES (:local, :fullname, :email, :whatsapp, :course, :terms, NOW())";
-            $stmt = $conn->prepare($sql);
-            $stmt->execute([
-                ':local'     => $local,
-                ':fullname'  => $fullname,
-                ':email'     => $email,
-                ':whatsapp'  => $whatsapp,
-                ':course'    => $course,
-                ':terms'     => $terms
-            ]);
+        // 🔹 Inserção direta (fallback)
+        $stmt = $conn->prepare("
+            INSERT IGNORE INTO registros_visitas 
+            (local, fullname, email, whatsapp, course, terms, created_at)
+            VALUES (:local, :fullname, :email, :whatsapp, :course, :terms, NOW())
+        ");
+        $stmt->execute($data);
 
-            if ($stmt->rowCount() > 0) {
-                $success = true;
-                $message = "Cadastro efetuado com sucesso!";
-            } else {
-                $message = "Você já se cadastrou.";
-            }
+        if ($stmt->rowCount() > 0) {
+            $success = true;
+            $message = "Cadastro efetuado com sucesso!";
+        } else {
+            $message = "Você já se cadastrou.";
         }
     }
 } catch (PDOException $e) {
-    $message = "Erro de banco de dados: " . $e->getMessage();
+    $message = "Erro de banco: " . $e->getMessage();
 } catch (Throwable $e) {
     $message = "Erro inesperado: " . $e->getMessage();
 }
 
-echo json_encode([
-    "success" => $success,
-    "message" => $message
-]);
+echo json_encode(["success" => $success, "message" => $message]);
