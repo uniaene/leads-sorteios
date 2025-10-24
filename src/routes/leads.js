@@ -11,6 +11,14 @@ function sanitize(s) {
 
 // POST /leads  → empilha na fila (Redis) e responde rápido
 router.post("/", async (req, res) => {
+    console.log("📩 Recebido:", req.body);
+
+    const { local_id, fullname, email, whatsapp, course, terms } = req.body;
+    if (!local_id || !fullname || !email || !whatsapp || !course || !terms) {
+        console.log("❌ Faltando algum campo!");
+        return res.status(400).json({ success: false, message: "Campos obrigatórios faltando." });
+    }
+
     try {
         const local_id = Number(req.body.local_id || req.body.local);
         const fullname = sanitize(req.body.fullname);
