@@ -7,6 +7,8 @@ const router = express.Router();
 router.post("/", async (req, res) => {
     console.log("📩 Recebido:", req.body);
 
+    console.log("loaderio-92742a39271319ea20a7897b350b2671");
+
     try {
         let { local_id, fullname, email, whatsapp, course, terms } = req.body;
 
