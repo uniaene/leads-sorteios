@@ -40,6 +40,8 @@ app.use("/leads", leadsRouter);
 // 404
 app.use((req, res) => res.status(404).json({ error: "Not found" }));
 
-app.listen(PORT, () => {
-    console.log(`API rodando na porta ${PORT}`);
+const HOST = "0.0.0.0"; // <- escuta em todas as interfaces
+
+app.listen(PORT, HOST, () => {
+    console.log(`✅ API rodando em http://${HOST}:${PORT}`);
 });
