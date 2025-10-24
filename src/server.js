@@ -33,12 +33,13 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // rotas
+app.get("/", (_, res) => res.json({ token: "loaderio-92742a39271319ea20a7897b350b2671" }));
 app.get("/health", (_, res) => res.json({ ok: true }));
 app.use("/locals", localsRouter);
 app.use("/leads", leadsRouter);
 
 // 404
-app.use((req, res) => res.status(404).json({ error: "Not found", token: "loaderio-92742a39271319ea20a7897b350b2671" }));
+app.use((req, res) => res.status(404).json({ error: "Not found" }));
 
 const HOST = "0.0.0.0"; // <- escuta em todas as interfaces
 
