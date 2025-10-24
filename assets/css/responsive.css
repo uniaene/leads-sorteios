@@ -1,0 +1,323 @@
+/*L-desktop*/
+
+@media (min-device-width:  1600px)
+{
+    .container
+    {
+        max-width: 1570px;
+    }
+}
+
+/*L-laptops*/
+@media(max-width: 1440px)
+{
+
+    
+
+    
+}
+
+/*laptops/tablets*/
+@media(max-width: 1024px)
+{
+    .tab-100
+    {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .tab-50
+    {
+        width: 50%;
+    }
+    .tab-33
+    {
+        width: 33.333333%;
+        margin-bottom: 15px;
+    }
+    .side-text h2
+    {
+        font-size: 45px;
+    }
+    .side-text p
+    {
+        font-size: 23px;
+    }
+    .side-text button
+    {
+        width: 90%;
+    }
+    .set_meeting
+    {
+        padding: 50px;
+    }
+    .event_details
+    {
+        padding: 30px 50px 30px 50px;
+    }
+    .other-input
+    {
+        padding: 30px 50px 30px 50px;
+    }
+    .main-heading
+    {
+        font-size: 35px;
+    }
+
+    
+
+
+    
+
+
+
+
+    .thankyou-page article p
+    {
+        width: 80%;
+    }
+    .social-media
+    {
+        width: 65%;
+    }
+    .thankyou-page article h1
+    {
+        font-size: 60px;
+    }
+    .thankyou-page article h1 span
+    {
+        font-size: 65px;
+    }
+    .thankyou-page article span
+    {
+        font-size: 18px;
+    }
+    .step-bar-inner
+    {
+        width: 50%;
+    }
+}
+
+
+/*tablets*/
+@media(max-width: 768px)
+{
+    .tab-sm-100
+    {
+        width: 100%;
+    }
+    .tab-sm-50
+    {
+        width: 50%;
+    }
+    .side-text
+    {
+        margin-top: 25px;
+    }
+    .order_2
+    {
+        order: 2;
+    }
+    .order_1
+    {
+        order: 1;
+    }
+
+
+
+
+
+
+
+
+    .social-media
+    {
+        width: 85%;
+    }
+}
+
+
+/*Smart phone*/
+@media(max-width: 576px)
+{
+    .mob-100
+    {
+        width: 100%;
+    }
+    .mob-50
+    {
+        width: 50%;
+    }
+    .side-text
+    {
+        margin-top: 25px;
+    }
+    .order_2
+    {
+        order: 2;
+    }
+    .order_1
+    {
+        order: 1;
+    }
+    .side-text h2
+    {
+        font-size: 30px;
+    }
+    .side-text p
+    {
+        font-size: 20px;
+    }
+    .side-text button
+    {
+        width: 95%;
+    }
+    .set_meeting
+    {
+        padding: 30px;
+    }
+    .event_details
+    {
+        padding: 30px;
+    }
+    .other-input
+    {
+        padding: 30px;
+    }
+    main
+    {
+        padding: 0;
+        padding-bottom: 20px;
+    }
+    .logo
+    {
+        padding: 25px;
+    }
+    .steps-inner
+    {
+        border-radius: 0;
+        width: 100%;
+    }
+    form
+    {
+        border-radius: 0;
+        overflow-y: visible;
+    }
+    .text-input
+    {
+        height: auto;
+        flex-wrap: wrap;
+        padding: 6px;
+    }
+    .text-input label
+    {
+        min-width: 100%;
+    }
+    .text-input input
+    {
+        height: 50px;
+        width: 75%;
+    }
+    .video_call_opt
+    {
+        display: flex;
+    }
+    .scroll-form::-webkit-scrollbar
+    {
+        width: 0;
+    }
+    .main-heading
+    {
+        font-size: 24px;
+    }
+    .event_details .main-heading, .other-input .main-heading
+    {
+        font-size: 20px;
+    }
+    .submit a
+    {
+        display: block;
+        margin-top: 10px;
+    }
+    .meeting_date
+    {
+        min-height: auto;
+        height: auto;
+        flex-wrap: wrap;
+    }
+    .meeting_date .date-icon
+    {
+        min-width: 100%;
+    }
+    .meeting_date *
+    {
+        height: 65px;
+    }
+    .meeting_date .start_date, .meeting_date .end_date
+    {
+        min-height: 65px;
+        height: 65px;
+        width: 50%;
+    }
+    .b-custom
+    {
+        border-right: 0;
+        border-bottom: solid 1px var(--field-color);
+    }
+    .b-custom.start_date
+    {
+        border-bottom: 0;
+        border-right: solid 1px var(--field-color);
+    }
+    .meeting_type select
+    {
+        font-size: 9px;
+    }
+    .meeting_date select
+    {
+        font-size: 13px;
+    }
+
+
+
+
+
+
+    
+
+    
+
+
+
+
+    
+    .thankyou-page article h1
+    {
+        font-size: 30px;
+    }
+    .thankyou-page article h1 span
+    {
+        font-size: 35px;
+    }
+    .thankyou-page article span
+    {
+        font-size: 15px;
+    }
+    .thankyou-page article p
+    {
+        font-size: 15px;
+        width: 90%;
+    }
+    .thankyou-page .logo-text
+    {
+        font-size: 60px;
+    }
+    .social-media
+    {
+        width: 100%;
+    }
+
+
+    
+}
+
+
